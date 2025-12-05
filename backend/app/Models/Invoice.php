@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class Invoice extends Model
 {
@@ -47,15 +47,14 @@ class Invoice extends Model
     {
         $year = Carbon::now()->year;
         $month = Carbon::now()->format('m');
-        
+
         $lastInvoice = self::whereYear('created_at', $year)
             ->whereMonth('created_at', Carbon::now()->month)
             ->orderBy('id', 'desc')
             ->first();
-        
+
         $sequence = $lastInvoice ? ((int) substr($lastInvoice->invoice_number, -4)) + 1 : 1;
-        
+
         return sprintf('INV-%s-%s-%04d', $year, $month, $sequence);
     }
 }
-

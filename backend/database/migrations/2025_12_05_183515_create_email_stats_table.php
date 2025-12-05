@@ -14,7 +14,7 @@ return new class extends Migration
             $table->integer('sent_count')->default(0);
             $table->integer('failed_count')->default(0);
             $table->timestamps();
-            
+
             $table->unique('date');
             $table->index('date');
         });
@@ -25,4 +25,3 @@ return new class extends Migration
         Schema::dropIfExists('email_stats');
     }
 };
-

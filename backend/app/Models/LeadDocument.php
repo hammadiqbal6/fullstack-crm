@@ -22,4 +22,3 @@ class LeadDocument extends Model
         return $this->belongsTo(Lead::class);
     }
 }
-

@@ -20,4 +20,3 @@ class LeadRejectedMail extends Mailable
             ->with(['lead' => $this->lead]);
     }
 }
-

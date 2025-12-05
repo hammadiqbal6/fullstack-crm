@@ -26,7 +26,7 @@ return new class extends Migration
             $table->text('previous_visa_history')->nullable();
             $table->json('metadata')->nullable();
             $table->timestamps();
-            
+
             $table->index('assigned_to');
             $table->index('user_id');
         });
@@ -37,4 +37,3 @@ return new class extends Migration
         Schema::dropIfExists('contacts');
     }
 };
-

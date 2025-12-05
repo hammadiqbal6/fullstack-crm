@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { AxiosError } from 'axios';
 import api from '@/lib/api';
 
 export default function OnboardingPage() {
@@ -22,8 +23,9 @@ export default function OnboardingPage() {
     const fetchLead = async () => {
       try {
         await api.get(`/onboard/${token}`);
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Invalid or expired token');
+      } catch (err) {
+        const error = err as AxiosError<{ message?: string }>;
+        setError(error.response?.data?.message || 'Invalid or expired token');
       } finally {
         setLoading(false);
       }
@@ -50,8 +52,9 @@ export default function OnboardingPage() {
         localStorage.setItem('user', JSON.stringify(response.data.user));
         router.push('/customer/profile');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to complete onboarding');
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      setError(error.response?.data?.message || 'Failed to complete onboarding');
     }
   };
 

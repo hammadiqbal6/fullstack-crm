@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('total', 15, 2)->default(0);
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             $table->index('contact_id');
             $table->index('invoice_number');
             $table->index('status');
@@ -32,4 +32,3 @@ return new class extends Migration
         Schema::dropIfExists('invoices');
     }
 };
-

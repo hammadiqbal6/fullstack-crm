@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Lead;
-use App\Models\User;
 use App\Models\Contact;
+use App\Models\Lead;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
 
 class OnboardingController extends Controller
 {
@@ -19,7 +18,7 @@ class OnboardingController extends Controller
             return Hash::check($token, $lead->onboarding_token);
         });
 
-        if (!$lead) {
+        if (! $lead) {
             return response()->json(['message' => 'Invalid token'], 404);
         }
 
@@ -44,7 +43,7 @@ class OnboardingController extends Controller
             return Hash::check($token, $lead->onboarding_token);
         });
 
-        if (!$lead) {
+        if (! $lead) {
             return response()->json(['message' => 'Invalid token'], 404);
         }
 
@@ -106,4 +105,3 @@ class OnboardingController extends Controller
         ], 201);
     }
 }
-

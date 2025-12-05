@@ -26,4 +26,3 @@ class QuestionnaireResponseAnswer extends Model
         return $this->belongsTo(QuestionnaireQuestion::class, 'question_id');
     }
 }
-

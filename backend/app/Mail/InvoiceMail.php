@@ -15,13 +15,12 @@ class InvoiceMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Invoice #' . $this->invoice->invoice_number)
+        return $this->subject('Invoice #'.$this->invoice->invoice_number)
             ->view('emails.invoice')
             ->with(['invoice' => $this->invoice])
-            ->attach(storage_path('app/public/invoices/' . $this->invoice->id . '.pdf'), [
-                'as' => 'invoice-' . $this->invoice->invoice_number . '.pdf',
+            ->attach(storage_path('app/public/invoices/'.$this->invoice->id.'.pdf'), [
+                'as' => 'invoice-'.$this->invoice->invoice_number.'.pdf',
                 'mime' => 'application/pdf',
             ]);
     }
 }
-

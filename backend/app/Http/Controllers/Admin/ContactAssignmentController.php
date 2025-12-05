@@ -19,7 +19,7 @@ class ContactAssignmentController extends Controller
         $user = User::findOrFail($validated['user_id']);
 
         // Ensure user is staff
-        if (!$user->isStaff()) {
+        if (! $user->isStaff()) {
             return response()->json(['message' => 'User must be staff to be assigned contacts'], 400);
         }
 
@@ -40,4 +40,3 @@ class ContactAssignmentController extends Controller
         return response()->json($contacts);
     }
 }
-

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Questionnaire;
 use App\Models\QuestionnaireResponse;
-use App\Models\Contact;
 use Illuminate\Http\Request;
 
 class QuestionnaireController extends Controller
@@ -45,7 +44,7 @@ class QuestionnaireController extends Controller
         $user = auth()->user();
         $contact = $user->contact;
 
-        if (!$contact) {
+        if (! $contact) {
             return response()->json(['message' => 'Contact not found'], 404);
         }
 
@@ -92,4 +91,3 @@ class QuestionnaireController extends Controller
         return response()->json($response->load('answers'), 201);
     }
 }
-

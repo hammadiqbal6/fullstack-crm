@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('size')->nullable();
             $table->string('category')->nullable();
             $table->timestamps();
-            
+
             $table->index(['attachable_type', 'attachable_id']);
         });
     }
@@ -28,4 +28,3 @@ return new class extends Migration
         Schema::dropIfExists('files');
     }
 };
-

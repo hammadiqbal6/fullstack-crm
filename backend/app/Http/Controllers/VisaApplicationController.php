@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\VisaApplication;
 use App\Models\Contact;
+use App\Models\VisaApplication;
 use Illuminate\Http\Request;
 
 class VisaApplicationController extends Controller
@@ -11,7 +11,7 @@ class VisaApplicationController extends Controller
     public function index($contactId)
     {
         $contact = Contact::findOrFail($contactId);
-        
+
         // Check access
         $user = auth()->user();
         if ($user->hasRole('admin')) {
@@ -58,7 +58,7 @@ class VisaApplicationController extends Controller
     public function submit($id)
     {
         $application = VisaApplication::findOrFail($id);
-        
+
         if ($application->status !== 'DRAFT') {
             return response()->json(['message' => 'Application can only be submitted from DRAFT status'], 400);
         }
@@ -71,4 +71,3 @@ class VisaApplicationController extends Controller
         return response()->json($application);
     }
 }
-

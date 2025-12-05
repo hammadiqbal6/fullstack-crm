@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Invoice;
-use App\Models\InvoiceItem;
 use App\Models\Contact;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -91,7 +90,7 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = Invoice::with(['contact', 'items'])->findOrFail($id);
-        
+
         // Check access
         $user = auth()->user();
         if ($user->hasRole('admin')) {
@@ -108,7 +107,7 @@ class InvoiceController extends Controller
     public function update(Request $request, $id)
     {
         $invoice = Invoice::with('contact')->findOrFail($id);
-        
+
         // Check access
         $user = auth()->user();
         if ($user->hasRole('admin')) {
@@ -134,7 +133,7 @@ class InvoiceController extends Controller
     public function addItem(Request $request, $id)
     {
         $invoice = Invoice::findOrFail($id);
-        
+
         $validated = $request->validate([
             'description' => 'required|string',
             'quantity' => 'required|integer|min:1',
@@ -189,11 +188,10 @@ class InvoiceController extends Controller
     public function send($id)
     {
         $invoice = Invoice::with(['contact', 'items'])->findOrFail($id);
-        
+
         // TODO: Implement PDF generation and email sending job
         // dispatch(new \App\Jobs\SendInvoiceEmailJob($invoice));
 
         return response()->json(['message' => 'Invoice queued for sending']);
     }
 }
-

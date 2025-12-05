@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('application_date')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             $table->index('contact_id');
             $table->index('status');
         });
@@ -30,4 +30,3 @@ return new class extends Migration
         Schema::dropIfExists('visa_applications');
     }
 };
-

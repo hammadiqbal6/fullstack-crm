@@ -25,7 +25,7 @@ return new class extends Migration
             $table->text('rejection_reason')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
-            
+
             $table->index('status');
             $table->index('email');
             $table->index('onboarding_token');
@@ -37,4 +37,3 @@ return new class extends Migration
         Schema::dropIfExists('leads');
     }
 };
-

@@ -10,15 +10,14 @@ class CustomerMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
-        if (!auth()->user()->isCustomer()) {
+        if (! auth()->user()->isCustomer()) {
             return response()->json(['message' => 'Unauthorized. Customer access required.'], 403);
         }
 
         return $next($request);
     }
 }
-

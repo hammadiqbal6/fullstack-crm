@@ -70,4 +70,3 @@ class Contact extends Model
         return $this->morphMany(File::class, 'attachable');
     }
 }
-

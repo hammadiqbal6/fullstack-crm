@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\File;
 use App\Models\Contact;
+use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,7 +15,7 @@ class DocumentController extends Controller
         $user = auth()->user();
         $contact = $user->contact;
 
-        if (!$contact) {
+        if (! $contact) {
             return response()->json(['message' => 'Contact not found'], 404);
         }
 
@@ -34,7 +34,7 @@ class DocumentController extends Controller
         $user = auth()->user();
         $contact = $user->contact;
 
-        if (!$contact) {
+        if (! $contact) {
             return response()->json(['message' => 'Contact not found'], 404);
         }
 
@@ -59,7 +59,7 @@ class DocumentController extends Controller
         $user = auth()->user();
         $contact = $user->contact;
 
-        if (!$contact) {
+        if (! $contact) {
             return response()->json(['message' => 'Contact not found'], 404);
         }
 
@@ -74,4 +74,3 @@ class DocumentController extends Controller
         return response()->json(['message' => 'File deleted successfully']);
     }
 }
-

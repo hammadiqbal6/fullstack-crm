@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
-import { auth } from '@/lib/auth';
+import { auth, CustomerProfile } from '@/lib/auth';
 
 export default function CustomerProfilePage() {
   const router = useRouter();
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<CustomerProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -41,7 +41,7 @@ export default function CustomerProfilePage() {
       const response = await api.put('/customer/profile', data);
       setProfile(response.data);
       alert('Profile updated successfully');
-    } catch (err) {
+    } catch {
       alert('Failed to update profile');
     } finally {
       setSaving(false);

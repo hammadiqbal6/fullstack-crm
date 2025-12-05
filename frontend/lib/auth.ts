@@ -22,6 +22,26 @@ export interface Contact {
   company?: string;
 }
 
+export interface Lead {
+  id: string;
+  full_name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  message?: string;
+  status: 'NEW' | 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED' | 'CONVERTED';
+  source?: string;
+  rejection_reason?: string;
+}
+
+export interface CustomerProfile {
+  user?: User;
+  contact?: Contact & {
+    target_country?: string;
+    visa_type?: string;
+  };
+}
+
 export const auth = {
   async login(email: string, password: string) {
     const response = await api.post('/auth/login', { email, password });

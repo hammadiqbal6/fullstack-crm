@@ -11,6 +11,7 @@ class Lead extends Model
     use HasFactory;
 
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [
@@ -76,4 +77,3 @@ class Lead extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-

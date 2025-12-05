@@ -29,16 +29,16 @@ class LeadController extends Controller
     public function show($id)
     {
         $lead = Lead::with(['documents', 'approvedBy', 'createdBy'])->findOrFail($id);
-        
+
         // Check permission
-        if (!auth()->user()->hasPermission('leads.view')) {
+        if (! auth()->user()->hasPermission('leads.view')) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         // Staff can only see assigned leads
-        if (auth()->user()->isStaff() && !auth()->user()->hasRole('admin')) {
+        if (auth()->user()->isStaff() && ! auth()->user()->hasRole('admin')) {
             $contact = $lead->contact;
-            if (!$contact || $contact->assigned_to !== auth()->id()) {
+            if (! $contact || $contact->assigned_to !== auth()->id()) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
         }
@@ -46,4 +46,3 @@ class LeadController extends Controller
         return response()->json($lead);
     }
 }
-

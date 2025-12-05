@@ -10,7 +10,7 @@ class HasRole
 {
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
@@ -25,4 +25,3 @@ class HasRole
         return response()->json(['message' => 'Unauthorized. Insufficient role.'], 403);
     }
 }
-

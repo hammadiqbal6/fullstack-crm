@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('required')->default(false);
             $table->integer('order')->default(0);
             $table->timestamps();
-            
+
             $table->index('questionnaire_id');
         });
     }
@@ -27,4 +27,3 @@ return new class extends Migration
         Schema::dropIfExists('questionnaire_questions');
     }
 };
-

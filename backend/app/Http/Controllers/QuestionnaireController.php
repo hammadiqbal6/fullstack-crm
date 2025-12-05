@@ -53,6 +53,7 @@ class QuestionnaireController extends Controller
     public function show($id)
     {
         $questionnaire = Questionnaire::with('questions')->findOrFail($id);
+
         return response()->json($questionnaire);
     }
 
@@ -79,4 +80,3 @@ class QuestionnaireController extends Controller
         return response()->json(['message' => 'Questionnaire deleted successfully']);
     }
 }
-

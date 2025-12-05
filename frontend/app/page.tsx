@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { AxiosError } from 'axios';
 import api from '@/lib/api';
 
 export default function Home() {
@@ -30,8 +31,9 @@ export default function Home() {
         message: '',
         source: 'website',
       });
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to submit. Please try again.');
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      setError(error.response?.data?.message || 'Failed to submit. Please try again.');
     }
   };
 

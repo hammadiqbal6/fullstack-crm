@@ -18,7 +18,7 @@ class LeadApprovedMail extends Mailable
 
     public function build()
     {
-        $onboardingUrl = config('app.frontend_url', 'http://localhost:3000') . '/onboard/' . $this->token;
+        $onboardingUrl = config('app.frontend_url', 'http://localhost:3000').'/onboard/'.$this->token;
 
         return $this->subject('Welcome! Complete Your Onboarding')
             ->view('emails.lead-approved')
@@ -28,4 +28,3 @@ class LeadApprovedMail extends Mailable
             ]);
     }
 }
-

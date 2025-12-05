@@ -39,4 +39,3 @@ class VisaApplication extends Model
         return $this->morphMany(File::class, 'attachable');
     }
 }
-

@@ -10,7 +10,7 @@ class HasPermission
 {
     public function handle(Request $request, Closure $next, ...$permissions): Response
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
@@ -25,4 +25,3 @@ class HasPermission
         return response()->json(['message' => 'Unauthorized. Insufficient permission.'], 403);
     }
 }
-

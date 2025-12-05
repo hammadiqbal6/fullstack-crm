@@ -15,7 +15,7 @@ return new class extends Migration
             $table->text('answer_text')->nullable();
             $table->string('answer_file_path')->nullable();
             $table->timestamps();
-            
+
             $table->index('response_id');
             $table->index('question_id');
         });
@@ -26,4 +26,3 @@ return new class extends Migration
         Schema::dropIfExists('questionnaire_response_answers');
     }
 };
-

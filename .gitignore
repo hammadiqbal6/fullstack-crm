@@ -36,6 +36,7 @@ vendor/
 # IDE
 .idea/
 .vscode/
+.cursor/
 *.swp
 *.swo
 *.sublime-*

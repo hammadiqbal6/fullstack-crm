@@ -1,26 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { AxiosError } from 'axios';
 import api from '@/lib/api';
-import { auth } from '@/lib/auth';
+import { auth, Lead } from '@/lib/auth';
 
 export default function AdminLeadsPage() {
   const router = useRouter();
-  const [leads, setLeads] = useState<any[]>([]);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
 
-  useEffect(() => {
-    if (!auth.isAdmin()) {
-      router.push('/login');
-      return;
-    }
-
-    fetchLeads();
-  }, [router, statusFilter]);
-
-  const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
     try {
       const params = statusFilter ? { status: statusFilter } : {};
       const response = await api.get('/admin/leads', { params });
@@ -30,15 +22,25 @@ export default function AdminLeadsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
+
+  useEffect(() => {
+    if (!auth.isAdmin()) {
+      router.push('/login');
+      return;
+    }
+
+    fetchLeads();
+  }, [router, fetchLeads]);
 
   const handleApprove = async (id: string) => {
     try {
       await api.post(`/admin/leads/${id}/approve`);
       fetchLeads();
       alert('Lead approved successfully');
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Failed to approve lead');
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      alert(error.response?.data?.message || 'Failed to approve lead');
     }
   };
 
@@ -48,8 +50,9 @@ export default function AdminLeadsPage() {
       await api.post(`/admin/leads/${id}/reject`, { rejection_reason: reason });
       fetchLeads();
       alert('Lead rejected');
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Failed to reject lead');
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      alert(error.response?.data?.message || 'Failed to reject lead');
     }
   };
 

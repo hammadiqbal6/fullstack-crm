@@ -45,7 +45,7 @@ class EmailStat extends Model
     public static function getTodayCount(): int
     {
         $stat = self::where('date', now()->toDateString())->first();
+
         return $stat ? $stat->sent_count : 0;
     }
 }
-

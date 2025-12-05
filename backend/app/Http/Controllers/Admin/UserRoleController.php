@@ -11,6 +11,7 @@ class UserRoleController extends Controller
     public function index($id)
     {
         $user = User::with('roles')->findOrFail($id);
+
         return response()->json($user->roles);
     }
 
@@ -38,4 +39,3 @@ class UserRoleController extends Controller
         return response()->json(['message' => 'Role removed successfully']);
     }
 }
-

@@ -100,7 +100,7 @@ class ContactController extends Controller
     {
         $contact = Contact::findOrFail($id);
 
-        if (!auth()->user()->hasRole('admin')) {
+        if (! auth()->user()->hasRole('admin')) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -109,4 +109,3 @@ class ContactController extends Controller
         return response()->json(['message' => 'Contact deleted successfully']);
     }
 }
-

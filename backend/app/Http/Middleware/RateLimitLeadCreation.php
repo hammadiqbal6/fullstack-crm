@@ -11,7 +11,7 @@ class RateLimitLeadCreation
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $key = 'lead-creation:' . $request->ip();
+        $key = 'lead-creation:'.$request->ip();
 
         if (RateLimiter::tooManyAttempts($key, 5)) {
             return response()->json([
@@ -24,4 +24,3 @@ class RateLimitLeadCreation
         return $next($request);
     }
 }
-

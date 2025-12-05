@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Contact;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -13,7 +12,7 @@ class ProfileController extends Controller
         $user = auth()->user();
         $contact = $user->contact;
 
-        if (!$contact) {
+        if (! $contact) {
             return response()->json(['message' => 'Contact not found'], 404);
         }
 
@@ -28,7 +27,7 @@ class ProfileController extends Controller
         $user = auth()->user();
         $contact = $user->contact;
 
-        if (!$contact) {
+        if (! $contact) {
             return response()->json(['message' => 'Contact not found'], 404);
         }
 
@@ -56,4 +55,3 @@ class ProfileController extends Controller
         ]);
     }
 }
-

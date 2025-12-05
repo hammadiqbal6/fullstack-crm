@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamp('submitted_at')->nullable();
             $table->enum('status', ['DRAFT', 'SUBMITTED', 'REVIEWED'])->default('DRAFT');
             $table->timestamps();
-            
+
             $table->index('questionnaire_id');
             $table->index('contact_id');
         });
@@ -27,4 +27,3 @@ return new class extends Migration
         Schema::dropIfExists('questionnaire_responses');
     }
 };
-

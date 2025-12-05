@@ -40,11 +40,10 @@ class FileController extends Controller
         // Check access based on attachable
         // TODO: Add proper access checks
 
-        if (!Storage::disk('public')->exists($file->file_path)) {
+        if (! Storage::disk('public')->exists($file->file_path)) {
             return response()->json(['message' => 'File not found'], 404);
         }
 
         return Storage::disk('public')->download($file->file_path, $file->filename);
     }
 }
-

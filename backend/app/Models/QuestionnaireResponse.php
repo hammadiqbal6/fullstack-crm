@@ -44,4 +44,3 @@ class QuestionnaireResponse extends Model
         return $this->hasMany(QuestionnaireResponseAnswer::class, 'response_id');
     }
 }
-

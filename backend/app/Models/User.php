@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Permission;
 
 class User extends Authenticatable
 {
@@ -61,6 +60,7 @@ class User extends Authenticatable
         if (is_string($role)) {
             return $this->roles()->where('slug', $role)->exists();
         }
+
         return $this->roles()->where('id', $role)->exists();
     }
 
@@ -93,6 +93,7 @@ class User extends Authenticatable
         if (empty($roleIds)) {
             return collect();
         }
+
         return Permission::whereHas('roles', function ($query) use ($roleIds) {
             $query->whereIn('id', $roleIds);
         })->get();

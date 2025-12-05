@@ -19,13 +19,13 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
-        if (!$user->is_active) {
+        if (! $user->is_active) {
             throw ValidationException::withMessages([
                 'email' => ['Your account has been deactivated.'],
             ]);
@@ -49,7 +49,7 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         $user = $request->user()->load('roles.permissions', 'contact', 'assignedContacts');
-        
+
         return response()->json([
             'user' => $user,
             'roles' => $user->roles,
@@ -99,4 +99,3 @@ class AuthController extends Controller
         ]);
     }
 }
-

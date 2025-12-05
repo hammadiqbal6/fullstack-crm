@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { auth } from '@/lib/auth';
+import { AxiosError } from 'axios';
+import { auth, Role } from '@/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,17 +20,18 @@ export default function LoginPage() {
       const data = await auth.login(formData.email, formData.password);
       
       // Redirect based on role
-      if (data.user.roles.some((r: any) => r.slug === 'admin')) {
+      if (data.user.roles.some((r: Role) => r.slug === 'admin')) {
         router.push('/admin/leads');
-      } else if (data.user.roles.some((r: any) => r.slug === 'customer')) {
+      } else if (data.user.roles.some((r: Role) => r.slug === 'customer')) {
         router.push('/customer/profile');
-      } else if (data.user.roles.some((r: any) => r.slug === 'user' || r.slug === 'sales_rep')) {
+      } else if (data.user.roles.some((r: Role) => r.slug === 'user' || r.slug === 'sales_rep')) {
         router.push('/staff/contacts');
       } else {
         router.push('/dashboard');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid credentials');
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      setError(error.response?.data?.message || 'Invalid credentials');
     } finally {
       setLoading(false);
     }

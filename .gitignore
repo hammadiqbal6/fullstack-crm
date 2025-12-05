@@ -1,0 +1,71 @@
+# Laravel
+backend/.env
+backend/vendor/
+backend/storage/*.key
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*
+backend/.phpunit.result.cache
+backend/composer.lock
+
+# Next.js
+frontend/.next/
+frontend/node_modules/
+frontend/.env.local
+frontend/.env*.local
+frontend/out/
+frontend/.vercel
+frontend/package-lock.json
+
+# Node modules (anywhere - catch all)
+node_modules/
+**/node_modules/
+
+# Vendor (anywhere - catch all)
+vendor/
+**/vendor/
+
+# Docker
+*.log
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build files
+dist/
+build/
+*.map
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.cache
+
+# PDF files
+*.pdf
+!documentation/*.pdf
+
+# Large binary files
+*.so
+*.node
+*.dylib
+*.dll

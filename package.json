@@ -1,0 +1,29 @@
+{
+  "name": "crm",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && ./vendor/bin/pint --test",
+    "type-check:frontend": "cd frontend && npx tsc --noEmit",
+    "build:frontend": "cd frontend && npm run build"
+  },
+  "lint-staged": {
+    "frontend/**/*.{ts,tsx}": [
+      "cd frontend && eslint --fix",
+      "cd frontend && npx tsc --noEmit"
+    ],
+    "frontend/**/*.{js,jsx}": [
+      "cd frontend && eslint --fix"
+    ],
+    "backend/**/*.php": [
+      "cd backend && ./vendor/bin/pint"
+    ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
+  }
+}

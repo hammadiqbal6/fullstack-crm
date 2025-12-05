@@ -3,6 +3,27 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --secondary: #8b5cf6;
+  --accent: #ec4899;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --border: #e5e7eb;
+  --input: #ffffff;
+  --ring: #6366f1;
+  --radius: 0.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --muted: #1f1f1f;
+    --muted-foreground: #a1a1aa;
+    --border: #27272a;
+    --input: #18181b;
+  }
 }
 
 @theme inline {
@@ -12,15 +33,367 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Modern gradient backgrounds */
+.gradient-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-bg-light {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.gradient-bg-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+/* Modern card styles */
+.card {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  border: 1px solid rgb(243 244 246);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .card {
+  background-color: rgb(17 24 39);
+  border-color: rgb(31 41 55);
+}
+
+.card:hover {
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  transform: translateY(-2px);
+}
+
+/* Modern input styles */
+.input-modern {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(229 231 235);
+  background-color: white;
+  color: rgb(17 24 39);
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.dark .input-modern {
+  border-color: rgb(55 65 81);
+  background-color: rgb(31 41 55);
+  color: rgb(243 244 246);
+}
+
+.input-modern::placeholder {
+  color: rgb(156 163 175);
+}
+
+.dark .input-modern::placeholder {
+  color: rgb(107 114 128);
+}
+
+.input-modern:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(99 102 241), 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+
+.input-modern:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Modern button styles */
+.btn-primary {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(to right, rgb(99 102 241), rgb(139 92 246));
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(to right, rgb(79 70 229), rgb(124 58 237));
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  transform: translateY(-1px);
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(99 102 241), 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary:disabled:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  transform: none;
+}
+
+/* Error message styles */
+.error-message {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: rgb(254 242 242);
+  border: 1px solid rgb(254 202 202);
+  color: rgb(153 27 27);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.dark .error-message {
+  background-color: rgb(127 29 29 / 0.2);
+  border-color: rgb(153 27 27);
+  color: rgb(254 202 202);
+}
+
+.error-message::before {
+  content: "⚠";
+  font-size: 1.25rem;
+}
+
+/* Success message styles */
+.success-message {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: rgb(240 253 244);
+  border: 1px solid rgb(187 247 208);
+  color: rgb(22 101 52);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.dark .success-message {
+  background-color: rgb(20 83 45 / 0.2);
+  border-color: rgb(22 101 52);
+  color: rgb(187 247 208);
+}
+
+.success-message::before {
+  content: "✓";
+  font-size: 1.25rem;
+}
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glass morphism effect */
+.glass {
+  background-color: rgb(255 255 255 / 0.8);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.dark .glass {
+  background-color: rgb(17 24 39 / 0.8);
+  border-color: rgb(55 65 81 / 0.5);
+}
+
+/* Modern link styles */
+.link-modern {
+  color: rgb(99 102 241);
+  font-weight: 500;
+  transition: color 0.2s;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.dark .link-modern {
+  color: rgb(129 140 248);
+}
+
+.link-modern:hover {
+  color: rgb(79 70 229);
+  text-decoration: underline;
+}
+
+.dark .link-modern:hover {
+  color: rgb(165 180 252);
+}
+
+/* Form label styles */
+.label-modern {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(55 65 75);
+  margin-bottom: 0.5rem;
+}
+
+.dark .label-modern {
+  color: rgb(209 213 219);
+}
+
+/* Container styles */
+.container-modern {
+  max-width: 28rem;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Page wrapper */
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom right, rgb(249 250 251), white, rgb(249 250 251));
+  padding: 3rem 1rem;
+}
+
+.dark .page-wrapper {
+  background: linear-gradient(to bottom right, rgb(17 24 39), rgb(31 41 55), rgb(17 24 39));
+}
+
+@media (min-width: 640px) {
+  .page-wrapper {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-wrapper {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* React Intl Tel Input custom styles */
+.intl-tel-input {
+  width: 100%;
+}
+
+.intl-tel-input .flag-dropdown {
+  border-radius: 0.75rem 0 0 0.75rem;
+  border-right: 1px solid rgb(229 231 235);
+  background-color: rgb(249 250 251);
+  z-index: 10;
+}
+
+.dark .intl-tel-input .flag-dropdown {
+  border-color: rgb(55 65 81);
+  background-color: rgb(31 41 55);
+}
+
+.intl-tel-input .flag-dropdown:hover {
+  background-color: rgb(243 244 246);
+}
+
+.dark .intl-tel-input .flag-dropdown:hover {
+  background-color: rgb(55 65 81);
+}
+
+.intl-tel-input .flag-dropdown .selected-flag {
+  padding: 0.75rem 0.75rem;
+}
+
+.intl-tel-input .flag-dropdown .arrow {
+  border-top-color: rgb(75 85 99);
+}
+
+.dark .intl-tel-input .flag-dropdown .arrow {
+  border-top-color: rgb(156 163 175);
+}
+
+.intl-tel-input .country-list {
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border: 1px solid rgb(229 231 235);
+  background-color: white;
+  max-height: 300px;
+}
+
+.dark .intl-tel-input .country-list {
+  border-color: rgb(55 65 81);
+  background-color: rgb(31 41 55);
+}
+
+.intl-tel-input .country-list .country {
+  transition: background-color 0.2s;
+}
+
+.intl-tel-input .country-list .country:hover {
+  background-color: rgb(243 244 246);
+}
+
+.dark .intl-tel-input .country-list .country:hover {
+  background-color: rgb(55 65 81);
+}
+
+.intl-tel-input .country-list .country.highlight {
+  background-color: rgb(238 242 255);
+}
+
+.dark .intl-tel-input .country-list .country.highlight {
+  background-color: rgb(99 102 241 / 0.3);
+}
+
+.intl-tel-input input[type="tel"] {
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding-left: 3.5rem;
+}
+
+.intl-tel-input.error input[type="tel"] {
+  border-color: rgb(239 68 68);
+}
+
+.intl-tel-input.error input[type="tel"]:focus {
+  box-shadow: 0 0 0 2px rgb(239 68 68), 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Animations */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

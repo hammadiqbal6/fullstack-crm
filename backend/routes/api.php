@@ -6,7 +6,7 @@ use App\Http\Controllers\OnboardingController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
-Route::post('/leads', [LeadController::class, 'store'])->middleware('throttle:5,60');
+Route::post('/leads', [LeadController::class, 'store']);
 
 // Onboarding route (public with token)
 Route::get('/onboard/{token}', [OnboardingController::class, 'show'])->name('onboard.show');
@@ -14,6 +14,7 @@ Route::post('/onboard/{token}', [OnboardingController::class, 'complete']);
 
 // Authentication routes
 Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);

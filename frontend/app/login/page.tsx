@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { AxiosError } from 'axios';
 import { auth, Role } from '@/lib/auth';
 
@@ -38,22 +39,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+    <div className="page-wrapper">
+      <div className="container-modern">
+        <div className="card p-8 sm:p-10">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+              Welcome Back
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Sign in to your account to continue
+            </p>
+          </div>
+
           {error && (
-            <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
+            <div className="error-message mb-6">
+              <span className="flex-1">{error}</span>
             </div>
           )}
-          <div className="rounded-md shadow-sm -space-y-px">
+
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="sr-only">Email address</label>
+              <label htmlFor="email" className="label-modern">
+                Email Address <span className="text-red-500">*</span>
+              </label>
               <input
                 id="email"
                 name="email"
@@ -61,12 +69,16 @@ export default function LoginPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                className="input-modern"
+                placeholder="you@example.com"
+                autoComplete="email"
               />
             </div>
+
             <div>
-              <label htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="label-modern">
+                Password <span className="text-red-500">*</span>
+              </label>
               <input
                 id="password"
                 name="password"
@@ -74,24 +86,38 @@ export default function LoginPage() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                className="input-modern"
+                placeholder="Enter your password"
+                autoComplete="current-password"
               />
             </div>
-          </div>
 
-          <div>
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="btn-primary"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="spinner"></span>
+                  Signing in...
+                </span>
+              ) : (
+                'Sign in'
+              )}
             </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Don't have an account?{' '}
+              <Link href="/register" className="link-modern">
+                Sign up here
+              </Link>
+            </p>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
 }
-

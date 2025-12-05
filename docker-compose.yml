@@ -3,31 +3,53 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      target: development
     container_name: crm_backend
     restart: unless-stopped
     working_dir: /var/www/html
     ports:
       - "8000:8000"
+      - "5173:5173"  # Vite dev server port
     volumes:
       - ./backend:/var/www/html
       - ./backend/storage:/var/www/html/storage
+      - /var/www/html/node_modules  # Prevent overwriting node_modules
     environment:
-      - DB_HOST=db
-      - DB_DATABASE=crm
-      - DB_USERNAME=crm_user
-      - DB_PASSWORD=password
-      - REDIS_HOST=redis
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_CONNECTION=${DB_CONNECTION:-mysql}
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_DATABASE=${DB_DATABASE:-crm}
+      - DB_USERNAME=${DB_USERNAME:-crm_user}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_CLIENT=${REDIS_CLIENT:-phpredis}
+      - CACHE_STORE=${CACHE_STORE:-redis}
+      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+      - APP_URL=${APP_URL:-http://localhost:8000}
+      - VITE_APP_URL=${VITE_APP_URL:-http://localhost:5173}
     networks:
       - crm_network
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "php", "-r", "file_get_contents('http://localhost:8000') ? exit(0) : exit(1);"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     command: php artisan serve --host=0.0.0.0 --port=8000
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: development
     container_name: crm_frontend
     restart: unless-stopped
     ports:
@@ -37,11 +59,20 @@ services:
       - /app/node_modules
       - /app/.next
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+      - NODE_ENV=${NODE_ENV:-development}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000/api}
+      - NEXT_TELEMETRY_DISABLED=${NEXT_TELEMETRY_DISABLED:-1}
     networks:
       - crm_network
     depends_on:
-      - app
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   nginx:
     image: nginx:alpine
@@ -62,25 +93,37 @@ services:
     container_name: crm_db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: crm
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_PASSWORD: password
-      MYSQL_USER: crm_user
+      MYSQL_DATABASE: ${DB_DATABASE:-crm}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
+      MYSQL_USER: ${DB_USERNAME:-crm_user}
     ports:
-      - "3308:3306"
+      - "${DB_EXTERNAL_PORT:-3308}:3306"
+    command: --default-authentication-plugin=mysql_native_password --wait-timeout=28800 --interactive-timeout=28800
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - crm_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   redis:
     image: redis:alpine
     container_name: crm_redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     networks:
       - crm_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   mailhog:
     image: mailhog/mailhog

@@ -18,6 +18,10 @@ class LeadController extends Controller
             'source' => 'nullable|string|max:255',
         ]);
 
+        // Force a fresh database connection for this request
+        \DB::purge();
+        \DB::reconnect();
+
         $lead = Lead::create([
             ...$validated,
             'status' => 'NEW',

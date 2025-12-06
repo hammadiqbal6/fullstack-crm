@@ -50,7 +50,7 @@ export default function OnboardingPage() {
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        router.push('/customer/profile');
+        router.push('/dashboard');
       }
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;

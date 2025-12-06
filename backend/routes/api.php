@@ -33,6 +33,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/leads/{id}/approve', [App\Http\Controllers\Admin\LeadController::class, 'approve']);
         Route::post('/leads/{id}/reject', [App\Http\Controllers\Admin\LeadController::class, 'reject']);
 
+        // Customers (converted leads)
+        Route::get('/customers', [App\Http\Controllers\Admin\CustomerController::class, 'index']);
+        Route::get('/customers/{id}', [App\Http\Controllers\Admin\CustomerController::class, 'show']);
+
         // Roles and permissions
         Route::get('/roles', [App\Http\Controllers\Admin\RoleController::class, 'index']);
         Route::get('/permissions', [App\Http\Controllers\Admin\RoleController::class, 'permissions']);

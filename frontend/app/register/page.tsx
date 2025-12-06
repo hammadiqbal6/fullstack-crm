@@ -44,14 +44,8 @@ export default function RegisterPage() {
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        // Redirect based on role
-        if (response.data.user.roles?.some((r: any) => r.slug === 'admin')) {
-          router.push('/admin/leads');
-        } else if (response.data.user.roles?.some((r: any) => r.slug === 'customer')) {
-          router.push('/customer/profile');
-        } else {
-          router.push('/dashboard');
-        }
+        // Redirect all users to unified dashboard
+        router.push('/dashboard');
       }
     } catch (err) {
       const error = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;

@@ -5,12 +5,15 @@ import { useRouter } from 'next/navigation';
 import { AxiosError } from 'axios';
 import api from '@/lib/api';
 import { auth, Lead } from '@/lib/auth';
+import { showSuccess, showError } from '@/lib/toast';
 
 export default function AdminLeadsPage() {
   const router = useRouter();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
+  const [rejectingLead, setRejectingLead] = useState<string | null>(null);
+  const [rejectionReason, setRejectionReason] = useState('');
 
   const fetchLeads = useCallback(async () => {
     try {
@@ -19,6 +22,7 @@ export default function AdminLeadsPage() {
       setLeads(response.data.data || response.data);
     } catch (err) {
       console.error(err);
+      showError('Failed to fetch leads');
     } finally {
       setLoading(false);
     }
@@ -35,24 +39,39 @@ export default function AdminLeadsPage() {
 
   const handleApprove = async (id: string) => {
     try {
-      await api.post(`/admin/leads/${id}/approve`);
-      fetchLeads();
-      alert('Lead approved successfully');
+      const response = await api.post(`/admin/leads/${id}/approve`);
+      await fetchLeads();
+      
+      // Check if lead was converted to customer
+      if (response.data.message?.includes('converted') || response.data.converted) {
+        showSuccess('Lead approved and converted to customer successfully!');
+      } else {
+        showSuccess('Lead approved successfully!');
+      }
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
-      alert(error.response?.data?.message || 'Failed to approve lead');
+      showError(error.response?.data?.message || 'Failed to approve lead');
     }
   };
 
   const handleReject = async (id: string) => {
-    const reason = prompt('Rejection reason (optional):');
+    setRejectingLead(id);
+  };
+
+  const confirmReject = async () => {
+    if (!rejectingLead) return;
+    
     try {
-      await api.post(`/admin/leads/${id}/reject`, { rejection_reason: reason });
-      fetchLeads();
-      alert('Lead rejected');
+      await api.post(`/admin/leads/${rejectingLead}/reject`, { 
+        rejection_reason: rejectionReason || undefined 
+      });
+      await fetchLeads();
+      showSuccess('Lead rejected successfully');
+      setRejectingLead(null);
+      setRejectionReason('');
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
-      alert(error.response?.data?.message || 'Failed to reject lead');
+      showError(error.response?.data?.message || 'Failed to reject lead');
     }
   };
 

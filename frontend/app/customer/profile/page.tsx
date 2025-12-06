@@ -4,12 +4,18 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import { auth, CustomerProfile } from '@/lib/auth';
+import DashboardCard from '@/components/DashboardCard';
 
 export default function CustomerProfilePage() {
   const router = useRouter();
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    phone: '',
+    company: '',
+    address: '',
+  });
 
   useEffect(() => {
     if (!auth.isCustomer()) {
@@ -21,6 +27,11 @@ export default function CustomerProfilePage() {
       try {
         const response = await api.get('/customer/profile');
         setProfile(response.data);
+        setFormData({
+          phone: response.data.phone || '',
+          company: response.data.company || '',
+          address: response.data.address || '',
+        });
       } catch (err) {
         console.error(err);
       } finally {
@@ -36,9 +47,7 @@ export default function CustomerProfilePage() {
     setSaving(true);
 
     try {
-      const formData = new FormData(e.currentTarget);
-      const data = Object.fromEntries(formData);
-      const response = await api.put('/customer/profile', data);
+      const response = await api.put('/customer/profile', formData);
       setProfile(response.data);
       alert('Profile updated successfully');
     } catch {
@@ -49,75 +58,145 @@ export default function CustomerProfilePage() {
   };
 
   if (loading) {
-    return <div className="p-8">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="spinner"></div>
+      </div>
+    );
   }
 
   if (!profile) {
-    return <div className="p-8">Profile not found</div>;
+    return (
+      <div className="dashboard-container">
+        <div className="error-message">Profile not found</div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">My Profile</h1>
-        <div className="bg-white shadow rounded-lg p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Profile</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
+          Manage your profile information
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Profile Info Card */}
+        <DashboardCard title="Account Information">
+          <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
-              <input
-                type="text"
-                name="name"
-                defaultValue={profile.user?.name}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
+              <p className="text-sm text-gray-600 dark:text-gray-400">Name</p>
+              <p className="font-semibold text-gray-900 dark:text-white">
+                {profile.contact?.primary_contact_name || 'N/A'}
+              </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <input
-                type="email"
-                defaultValue={profile.contact?.email}
-                disabled
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100"
-              />
+              <p className="text-sm text-gray-600 dark:text-gray-400">Email</p>
+              <p className="font-semibold text-gray-900 dark:text-white">
+                {profile.contact?.email || 'N/A'}
+              </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Phone</label>
-              <input
-                type="tel"
-                name="phone"
-                defaultValue={profile.contact?.phone}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
+              <p className="text-sm text-gray-600 dark:text-gray-400">Status</p>
+              <span className="badge badge-success">Active</span>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Target Country</label>
-              <input
-                type="text"
-                name="target_country"
-                defaultValue={profile.contact?.target_country}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Visa Type</label>
-              <input
-                type="text"
-                name="visa_type"
-                defaultValue={profile.contact?.visa_type}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
+          </div>
+        </DashboardCard>
+
+        {/* Edit Profile Form */}
+        <div className="lg:col-span-2">
+          <form onSubmit={handleSubmit}>
+            <DashboardCard 
+              title="Contact Details"
+              action={
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+                >
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </button>
+              }
             >
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
+              <div className="space-y-4">
+                <div>
+                  <label className="label-modern">Phone Number</label>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="input-modern"
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+
+                <div>
+                  <label className="label-modern">Company</label>
+                  <input
+                    type="text"
+                    value={formData.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                    className="input-modern"
+                    placeholder="Enter your company name"
+                  />
+                </div>
+
+                <div>
+                  <label className="label-modern">Address</label>
+                  <textarea
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    className="input-modern resize-none"
+                    rows={3}
+                    placeholder="Enter your address"
+                  />
+                </div>
+              </div>
+            </DashboardCard>
           </form>
         </div>
+      </div>
+
+      {/* Quick Links */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <DashboardCard title="Questionnaires">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Complete required questionnaires
+          </p>
+          <button
+            onClick={() => router.push('/questionnaires')}
+            className="btn-primary text-center w-full"
+          >
+            View Questionnaires
+          </button>
+        </DashboardCard>
+
+        <DashboardCard title="Invoices">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            View your invoices and payment status
+          </p>
+          <button
+            onClick={() => router.push('/invoices')}
+            className="btn-primary text-center w-full"
+          >
+            View Invoices
+          </button>
+        </DashboardCard>
+
+        <DashboardCard title="Dashboard">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Return to your dashboard
+          </p>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="btn-primary text-center w-full"
+          >
+            Go to Dashboard
+          </button>
+        </DashboardCard>
       </div>
     </div>
   );
 }
-

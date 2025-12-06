@@ -28,7 +28,8 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token');
-        window.location.href = '/login';
+        localStorage.removeItem('user');
+        // Don't redirect here - let middleware/components handle it
       }
     }
     return Promise.reject(error);

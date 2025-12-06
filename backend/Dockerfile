@@ -40,11 +40,18 @@ RUN npm install
 # Copy composer files
 COPY composer.json composer.lock* ./
 
-# Install PHP dependencies (including dev dependencies)
-RUN composer install
+# Install PHP dependencies
+# Using --no-scripts to avoid package discovery errors during initial install
+RUN composer install --no-scripts
 
 # Copy application files
 COPY . .
+
+# Now run composer scripts and optimize autoloader
+RUN composer dump-autoload --optimize
+
+# Generate Laravel application key if .env exists
+RUN if [ -f .env ]; then php artisan key:generate --force; fi
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \

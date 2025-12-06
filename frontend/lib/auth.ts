@@ -48,6 +48,8 @@ export const auth = {
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
+      // Set cookie for middleware
+      document.cookie = `token=${response.data.token}; path=/; max-age=604800`; // 7 days
     }
     return response.data;
   },
@@ -56,6 +58,8 @@ export const auth = {
     await api.post('/auth/logout');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    // Clear cookie
+    document.cookie = 'token=; path=/; max-age=0';
   },
 
   async me() {
